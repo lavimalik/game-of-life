@@ -1,0 +1,86 @@
+<!doctype html>
+<div id="grid"></div>
+<button id="next">Next generation</button>
+<button id="auto-run">Auto Run</button>
+<script>
+  // Conway's game of life
+  let gridDiv = document.querySelector('#grid'),
+      nextButton = document.querySelector('#next')
+  
+  let checkboxes = []
+  let width = 30, height = 20
+  
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      let box = document.createElement('input')
+      box.type = 'checkbox'
+      box.checked = Math.random() > .5
+      checkboxes.push(box)
+      gridDiv.appendChild(box)
+    }
+    gridDiv.appendChild(document.createElement('br'))
+  }
+  
+  function gridFromCheckBoxes(boxes) {
+    return boxes.map(box => box.checked)
+  }
+
+  function checkBoxesFromGrid(grid) {
+    grid.forEach((alive, i) => {
+      checkboxes[i].checked = alive
+    })
+  }
+
+
+  function nextGeneration(grid) {
+    let next = []
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        let cell = grid[y * width + x]
+        let liveNeighbors = countLiveNeighbors(x, y, grid)
+
+        if (cell && (liveNeighbors < 2 || liveNeighbors > 3)) {
+          cell = false
+        } else if (!cell && liveNeighbors == 3) {
+          cell = true
+        }
+
+        next[y * width + x] = cell
+      }
+    }
+    return next
+  }
+
+  function countLiveNeighbors(x, y, grid) {
+    let liveNeighbors = 0
+    for (let _y = Math.max(0, y - 1); _y <= Math.min(height - 1, y + 1); _y++) {
+      for (let _x = Math.max(0, x - 1); _x <= Math.min(width - 1, x + 1); _x++) {
+        if ((_x != x || _y != y) && grid[_y * width + _x]) {
+          liveNeighbors++
+        }
+      }
+    }
+    return liveNeighbors
+  }
+
+  function turn() {
+    checkBoxesFromGrid(
+      nextGeneration(
+        gridFromCheckBoxes(checkboxes)
+      )
+    )
+  }
+
+  nextButton.addEventListener('click', turn)
+
+  let interval = null
+  
+  document.querySelector("#auto-run").addEventListener('click', () => {
+    if (interval) {
+      clearInterval(interval)
+      interval = null
+    } else {
+      interval = setInterval(turn, 400)
+    }
+  })
+</script>
