@@ -9,3 +9,6 @@ Conway’s Game of Life is a simple simulation that creates artificial “life�
  - Any dead cell with exactly three live neighbors becomes a live cell.
 
 A _neighbor_ is defined as any adjacent cell, including diagonally adjacent ones.
+
+---
+[Eloquent JavaScript](https://eloquentjavascript.net/) https://eloquentjavascript.net/code/#18.3 exercise solution
